@@ -28,6 +28,15 @@ public class Chessboard {
         // Umieść hetmanów
         plansza[0][3] = new Hetman(0, 3, false, this);
         plansza[7][3] = new Hetman(7, 3, true, this);
+        // Umieść skoczki
+        plansza[0][1] = new Skoczek(0, 1, false, this);
+        plansza[0][6] = new Skoczek(0, 6, false, this);
+        plansza[7][1] = new Skoczek(7, 1, true, this);
+        plansza[7][6] = new Skoczek(7, 6, true, this);
+
+        // Umieść króle
+        plansza[0][4] = new Krol(0, 4, false, this);
+        plansza[7][4] = new Krol(7, 4, true, this);
     }
 
     public void displayBoard() {
