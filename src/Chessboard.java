@@ -18,6 +18,12 @@ public class Chessboard {
         plansza[0][7] = new Wieża(0, 7, false, this);
         plansza[7][0] = new Wieża(7, 0, true, this);
         plansza[7][7] = new Wieża(7, 7, true, this);
+
+        // Umieść gońce
+        plansza[0][2] = new Goniec(0, 2, false, this);
+        plansza[0][5] = new Goniec(0, 5, false, this);
+        plansza[7][2] = new Goniec(7, 2, true, this);
+        plansza[7][5] = new Goniec(7, 5, true, this);
     }
 
     public void displayBoard() {
@@ -60,6 +66,12 @@ public class Chessboard {
 
         if (!figura.czyPoprawnyRuch(newRow, newCol)) {
             System.out.println("Niepoprawny ruch figury.");
+            return false;
+        }
+
+        Figura figuraNaDocelowym = plansza[newRow][newCol];
+        if (figuraNaDocelowym != null && figuraNaDocelowym.czyBiały() == figura.czyBiały()) {
+            System.out.println("Na docelowej pozycji znajduje się figura tego samego koloru. Niepoprawny ruch figury.");
             return false;
         }
 
