@@ -1,22 +1,20 @@
-public class Wieża extends Figura {
-    public Wieża(int row, int col, boolean biały, Chessboard chessboard) {
+public class Hetman extends Figura {
+    public Hetman(int row, int col, boolean biały, Chessboard chessboard) {
         super(row, col, biały, chessboard);
     }
 
     @Override
-
-
     public void wykonajRuch(int newRow, int newCol) {
-        // Implementacja ruchu Wieży
+        // Implementacja ruchu Hetmana
         this.row = newRow;
         this.col = newCol;
     }
 
     @Override
     public boolean czyPoprawnyRuch(int newRow, int newCol) {
-        // Sprawdź, czy ruch jest w jednym z możliwych kierunków (pionowy lub poziomy)
-        if (newRow != row && newCol != col) {
-            System.out.println("Niepoprawny ruch wieży.");
+        // Sprawdź, czy ruch jest w jednym z możliwych kierunków (pionowy, poziomy lub na ukos)
+        if (newRow != row && newCol != col && Math.abs(newRow - row) != Math.abs(newCol - col)) {
+            System.out.println("Niepoprawny ruch hetmana.");
             return false;
         }
 
@@ -26,18 +24,17 @@ public class Wieża extends Figura {
 
         for (int i = row + rowIncrement, j = col + colIncrement; i != newRow || j != newCol; i += rowIncrement, j += colIncrement) {
             if (chessboard.plansza[i][j] != null) {
-                // Dodatkowa logika: nie można zbić własnej figury, jeśli pole docelowe nie jest puste
-                if (chessboard.plansza[i][j].czyBiały() == czyBiały() && chessboard.plansza[newRow][newCol] != null) {
-                    System.out.println("Niepoprawny ruch wieży. Nie można zbijać własnych figurek.");
-                    return false;
-                }
+                System.out.println("Na drodze hetmana znajduje się inna figura. Niepoprawny ruch hetmana.");
+                return false;
             }
         }
 
         // Poprawny ruch, brak przeszkód na drodze
         return true;
     }
+
+    @Override
     public char getSymbol() {
-        return 'W';
+        return czyBiały() ? 'H' : 'h';
     }
 }
