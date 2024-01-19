@@ -29,7 +29,7 @@ public class Main {
                 int endCol = moves[1].charAt(0) - 'a';
                 int endRow = 8 - Character.getNumericValue(moves[1].charAt(1));
 
-                chessboard.movePawn(startRow, startCol, endRow, endCol);
+                chessboard.moveFigure(startRow, startCol, endRow, endCol);
                 chessboard.displayBoard();
             } catch (Exception e) {
                 System.out.println("Wystąpił błąd: " + e.getMessage() + ". Spróbuj ponownie.");

@@ -1,33 +1,23 @@
 public class Chessboard {
-    private Pion[][] plansza;
+    public Figura[][] plansza;
 
     public Chessboard() {
-        plansza = initializeBoard();
+        plansza = new Figura[8][8];
+        initializeBoard();
     }
 
-    private Pion[][] initializeBoard() {
-        Pion[][] initialBoard = new Pion[8][8];
+    private void initializeBoard() {
+        // Umieść piony
+        for (int i = 0; i < 8; i++) {
+            plansza[1][i] = new Pion(1, i, false, this);
+            plansza[6][i] = new Pion(6, i, true, this);
+        }
 
-        // Utwórz piony i umieść je na planszy
-        initialBoard[1][0] = new Pion(1, 0, false);
-        initialBoard[1][1] = new Pion(1, 1, false);
-        initialBoard[1][2] = new Pion(1, 2, false);
-        initialBoard[1][3] = new Pion(1, 3, false);
-        initialBoard[1][4] = new Pion(1, 4, false);
-        initialBoard[1][5] = new Pion(1, 5, false);
-        initialBoard[1][6] = new Pion(1, 6, false);
-        initialBoard[1][7] = new Pion(1, 7, false);
-
-        initialBoard[6][0] = new Pion(6, 0, true);
-        initialBoard[6][1] = new Pion(6, 1, true);
-        initialBoard[6][2] = new Pion(6, 2, true);
-        initialBoard[6][3] = new Pion(6, 3, true);
-        initialBoard[6][4] = new Pion(6, 4, true);
-        initialBoard[6][5] = new Pion(6, 5, true);
-        initialBoard[6][6] = new Pion(6, 6, true);
-        initialBoard[6][7] = new Pion(6, 7, true);
-
-        return initialBoard;
+        // Umieść wieże
+        plansza[0][0] = new Wieża(0, 0, false, this);
+        plansza[0][7] = new Wieża(0, 7, false, this);
+        plansza[7][0] = new Wieża(7, 0, true, this);
+        plansza[7][7] = new Wieża(7, 7, true, this);
     }
 
     public void displayBoard() {
@@ -40,8 +30,8 @@ public class Chessboard {
                 System.out.print(kolorPola);
 
                 if (plansza[i][j] != null) {
-                    String oznaczeniePiona = plansza[i][j].czyBiały() ? "\u001B[31mP" : "\u001B[34mp"; // Czerwony P dla białych, niebieskie p dla czarnych
-                    System.out.print(oznaczeniePiona);
+                    String oznaczenieFigury = plansza[i][j].czyBiały() ? "\u001B[31m" : "\u001B[34m"; // Czerwony dla białych, niebieski dla czarnych
+                    System.out.print(oznaczenieFigury + plansza[i][j].getSymbol());
                 } else {
                     System.out.print(" ");
                 }
@@ -54,20 +44,46 @@ public class Chessboard {
         System.out.println(" +----------------");
     }
 
-
-    public void movePawn(int currentRow, int currentCol, int newRow, int newCol) {
-        if (isValidMove(currentRow, currentCol, newRow, newCol) && plansza[currentRow][currentCol] instanceof Pion) {
-            Pion pion = plansza[currentRow][currentCol];
-            plansza[currentRow][currentCol] = null;  // Usunięcie piona z obecnej pozycji
-            plansza[newRow][newCol] = pion;         // Przesunięcie piona na nową pozycję
-            pion.wykonajRuch(newRow, newCol);       // Aktualizacja pozycji piona
-        } else {
-            System.out.println("Niepoprawny ruch piona");
+    public boolean isValidMove(int currentRow, int currentCol, int newRow, int newCol) {
+        if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
+                newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
+            System.out.println("Ruch poza zakresem planszy.");
+            return false;
         }
+
+        Figura figura = plansza[currentRow][currentCol];
+
+        if (figura == null) {
+            System.out.println("Na pozycji początkowej nie ma figury.");
+            return false;
+        }
+
+        if (!figura.czyPoprawnyRuch(newRow, newCol)) {
+            System.out.println("Niepoprawny ruch figury.");
+            return false;
+        }
+
+        return true;
     }
 
-    private boolean isValidMove(int currentRow, int currentCol, int newRow, int newCol) {
-        // Tutaj możesz dodać bardziej zaawansowaną logikę walidacji ruchu
-        return (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8);
+    public void moveFigure(int currentRow, int currentCol, int newRow, int newCol) {
+        Figura figura = plansza[currentRow][currentCol];
+
+        if (figura != null && figura.czyPoprawnyRuch(newRow, newCol)) {
+            // Sprawdź, czy pole docelowe jest puste
+            if (plansza[newRow][newCol] == null) {
+                plansza[currentRow][currentCol] = null;
+                plansza[newRow][newCol] = figura;
+                figura.wykonajRuch(newRow, newCol);
+            } else {
+                // Jeśli na docelowym polu znajduje się figura, wykonaj zbijanie
+                plansza[currentRow][currentCol] = null;
+                plansza[newRow][newCol] = figura;
+                figura.wykonajRuch(newRow, newCol);
+                System.out.println("Figura zbita!");
+            }
+        } else {
+            System.out.println("Niepoprawny ruch figury");
+        }
     }
 }

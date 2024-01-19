@@ -19,7 +19,7 @@ public class ChessGame {
             String move = scanner.nextLine();
 
             if (isValidMove(move)) {
-                chessboard.movePawn(1, 0, 2, 0);
+                chessboard.moveFigure(1, 0, 2, 0);
                 // TODO: Add logic for checking check, checkmate, stalemate, castling, en passant, etc.
                 whiteTurn = !whiteTurn;
             } else {
