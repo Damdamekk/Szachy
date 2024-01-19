@@ -24,6 +24,10 @@ public class Chessboard {
         plansza[0][5] = new Goniec(0, 5, false, this);
         plansza[7][2] = new Goniec(7, 2, true, this);
         plansza[7][5] = new Goniec(7, 5, true, this);
+
+        // Umieść hetmanów
+        plansza[0][3] = new Hetman(0, 3, false, this);
+        plansza[7][3] = new Hetman(7, 3, true, this);
     }
 
     public void displayBoard() {
@@ -88,11 +92,15 @@ public class Chessboard {
                 plansza[newRow][newCol] = figura;
                 figura.wykonajRuch(newRow, newCol);
             } else {
-                // Jeśli na docelowym polu znajduje się figura, wykonaj zbijanie
-                plansza[currentRow][currentCol] = null;
-                plansza[newRow][newCol] = figura;
-                figura.wykonajRuch(newRow, newCol);
-                System.out.println("Figura zbita!");
+                // Sprawdź, czy zbijamy figurę przeciwnego koloru
+                if (figura.czyBiały() != plansza[newRow][newCol].czyBiały()) {
+                    plansza[currentRow][currentCol] = null;
+                    plansza[newRow][newCol] = figura;
+                    figura.wykonajRuch(newRow, newCol);
+                    System.out.println("Figura zbita!");
+                } else {
+                    System.out.println("Na docelowej pozycji znajduje się figura tego samego koloru. Niepoprawny ruch figury.");
+                }
             }
         } else {
             System.out.println("Niepoprawny ruch figury");
